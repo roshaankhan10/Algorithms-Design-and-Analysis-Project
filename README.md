@@ -1,1 +1,6 @@
 # Algorithms-Design-and-Analysis-Project
+**#The Project Overview:** 
+This project is based on the paper *"Edge-Connectivity Augmentation of Simple Graphs"* published in the SIAM Journal on Discrete Mathematics (2025). The core problem is to increase the edge-connectivity of a simple undirected graph \( G \) from \( k \) to \( k+1 \) by adding the smallest possible number of edges. The paper focuses on identifying vertices with degree \( k \), and explores two cases: when all such vertices can be perfectly matched in the complement graph, and when some remain unmatched. In the first case, we look for maximum matching which provides the solution; in the second, a minimal path-based augmentation is required.
+
+The approach to solve this involves, first constructing the complement of the graph itself induced by \( k \)-degree vertices, followed by using Edmonds’ Blossom Algorithm to compute the matching (depending on the case). If unmatched vertices remain, we can then shift to a path construction technique to ensure connectivity. This structured method will reduce redundant edge additions while guaranteeing the desired connectivity upgrade. So we aim for both an implementation and validation of this algorithmic strategy.
+
