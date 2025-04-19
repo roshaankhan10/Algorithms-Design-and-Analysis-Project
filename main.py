@@ -1,4 +1,20 @@
 # Project: Edge Connectivity Augmentation on Simple Graphs Title.md
+from graph_utils import generate_random_graph, get_complement_graph
+from augmentation import augment_graph_via_matching
+# from connectivity import compute_edge_connectivity, is_k_plus_1_edge_connected
+from visualize import draw_graph
+# from constants import NUM_NODES, EDGE_PROBABILITY, CONNECTIVITY_LEVEL
+import networkx as nx
+
+def compute_edge_connectivity(G):
+    return nx.edge_connectivity(G)
+
+def is_k_plus_1_edge_connected(G, k):
+    return compute_edge_connectivity(G) >= k + 1
+
+NUM_NODES = 10
+EDGE_PROBABILITY = 0.4
+CONNECTIVITY_LEVEL = 2
 
 def main():
     G = generate_random_graph(NUM_NODES, EDGE_PROBABILITY)

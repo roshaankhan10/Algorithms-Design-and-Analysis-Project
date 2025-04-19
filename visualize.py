@@ -7,4 +7,6 @@ def draw_graph(G, title="Graph", highlight_edges=None):
     if highlight_edges:
         nx.draw_networkx_edges(G, pos, edgelist=highlight_edges, edge_color='red', width=2)
     plt.title(title)
-    plt.show()
+    # plt.show()
+    plt.savefig(f"{draw_graph}.png")
+    plt.close()
