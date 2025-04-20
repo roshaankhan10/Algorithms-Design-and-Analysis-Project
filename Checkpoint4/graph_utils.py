@@ -15,3 +15,16 @@ def get_vertices_of_degree_k(G, k):
 
 def get_subgraph_by_vertices(G, vertices):
     return G.subgraph(vertices).copy()
+
+def generate_graph_from_edges(edges):
+    G = nx.Graph()
+    G.add_edges_from(edges)
+    return G
+
+from connectivity import is_k_plus_1_edge_connected
+
+def verify_augmentation(original_edges, new_edges, k):
+    G = nx.Graph()
+    G.add_edges_from(original_edges)
+    G.add_edges_from(new_edges)
+    return is_k_plus_1_edge_connected(G, k)
