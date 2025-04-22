@@ -49,50 +49,73 @@
 
 # if __name__ == "__main__":
 #     main()
-from graph_utils import generate_random_graph, get_complement_graph, get_vertices_of_degree_k, get_subgraph_by_vertices
-from augmentation import augment_connectivity, compute_edge_connectivity, is_k_plus_1_edge_connected
-from matching import compute_maximum_matching
+from graph_utils import generate_random_graph, get_complement_graph, get_vertices_of_degree_k, get_subgraph_by_vertices, generate_graph_from_edges
+from augmentation import augment_connectivity, compute_edge_connectivity
+# from connectivity import compute_edge_connectivity
 from visualize import draw_graph
 import networkx as nx
+import random
+from itertools import combinations
+import unittest
 
-
-# from augmentation import is_k_plus_1_edge_connected
-
+# ---- CONFIG ----
+MODE = "testcase"   # Choose: "random" or "testcase"
+# TESTCASE_EDGES = [[(0,1), (1,2), (2,3), (3,4), (4,0)][(0,1), (1,2), (2,3), (3,0)]] # Example: 4-cycle
 NUM_NODES = 10
 EDGE_PROBABILITY = 0.4
 CONNECTIVITY_LEVEL = 2
-
+# ----------------
 def main():
-    G = generate_random_graph(NUM_NODES, EDGE_PROBABILITY)
+    #take user input for mode
+    MODE = input("enter mode; 1 for random, 2 for testcase \n")
+    if MODE == "1":
+        MODE = "random"
+        G = generate_random_graph(NUM_NODES, EDGE_PROBABILITY)
+    elif MODE == "2":
+        MODE = "testcase"
+        #generate random number between 1 and 3
+        random_num = random.randint(1, 6)
+        if random_num == 1:
+            TESTCASE_EDGES = [(0,1), (1,2), (2,3), (3,4), (4,0)]
+        elif random_num == 2:
+            TESTCASE_EDGES = [(0,1), (1,2), (2,3), (3,0)]
+        elif random_num == 3:
+            TESTCASE_EDGES = [(0, 1), (1, 2), (2, 0), (3, 4), (4, 5), (5, 3)] # 2 regular disjoint cycles
+        elif random_num == 4:
+            TESTCASE_EDGES =  [(0, 1), (0, 2), (0, 3), (0, 4),
+                        (1, 2), (1, 3), (1, 4),
+                        (2, 3), (2, 4),
+                        (3, 4)] # Complete graph K5 near complete 5
+        elif random_num == 5:
+            TESTCASE_EDGES = [(0, 1), (1, 2), (2, 3), (3, 4), (4, 5), (5, 0), (0, 2), (3, 5)]
+        elif random_num == 6:
+            TESTCASE_EDGES = [(0, i) for i in range(1, 6)]
+        else:
+            raise ValueError("Invalid input. Use '1' for random or '2' for testcase.")
+        G = generate_graph_from_edges(TESTCASE_EDGES)
+    else:
+        raise ValueError("Invalid input. Use '1' for random or '2' for testcase.")
+    # if MODE == "random":
+    #     G = generate_random_graph(NUM_NODES, EDGE_PROBABILITY)
+    # elif MODE == "testcase":
+    #     G = generate_graph_from_edges(TESTCASE_EDGES)
+    # else:
+    #     raise ValueError("Invalid MODE. Use 'random' or 'testcase'.")
+
     draw_graph(G, title="Original Graph", filename="original_graph.png")
     print(f"Original edge connectivity: {compute_edge_connectivity(G)}")
 
     G_comp = get_complement_graph(G)
     draw_graph(G_comp, title="Complement Graph", filename="complement_graph.png")
 
-    # Determine which case
-    vertices_k = get_vertices_of_degree_k(G, CONNECTIVITY_LEVEL)
-    G_k = get_subgraph_by_vertices(G, vertices_k)
-    complement_G_k = get_complement_graph(G_k)
-    matching = compute_maximum_matching(complement_G_k)
-
-    if len(matching) * 2 == len(vertices_k):
-        print("Case 1: Matching covers all degree-k vertices.")
-    else:
-        print("Case 2: Matching does NOT cover all degree-k vertices.")
-
-    # Augment using full logic (case handled inside)
+    # Augment using internal logic
     edges = list(G.edges())
-    # new_edges = augment_connectivity(edges, CONNECTIVITY_LEVEL)
     G_aug, new_edges = augment_connectivity(edges, CONNECTIVITY_LEVEL)
 
-
-    G_aug = G.copy()
-    G_aug.add_edges_from(new_edges)
     draw_graph(G_aug, title="Augmented Graph", highlight_edges=new_edges, filename="augmented_graph.png")
-
     print(f"New edge connectivity: {compute_edge_connectivity(G_aug)}")
     print(f"Edges added: {new_edges}")
+
 
 if __name__ == "__main__":
     main()
